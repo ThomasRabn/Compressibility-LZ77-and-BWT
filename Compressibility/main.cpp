@@ -14,6 +14,8 @@ struct Compare {
 };
 
 void openFile(std::string name, std::string& data);
+/*void fillSuffixTab(std::string data, std::vector<std::string>& suffixTab);
+std::string BWTstring(std::string data, std::vector<std::string>& suffixTab);*/
 void fillSuffixTab(std::string data, std::vector<std::string*>& suffixTab);
 std::string BWTstring(std::string data, std::vector<std::string*>& suffixTab);
 int numberOfRuns(std::string result);
@@ -23,9 +25,9 @@ int main()
     std::string data;
     std::vector<std::string*> suffixTab;
 
-    //openFile("files/aaa.txt", data);
+    //openFile("files/aabb.txt", data);
 
-    data = "abracadabra";
+    data = "abracadabra!";
     data += '\0';
 
     fillSuffixTab(data, suffixTab);
@@ -57,9 +59,22 @@ void openFile(std::string name, std::string& data) {
         }
         data += '\0';
     }
-
-    std::cout << data << std::endl;
 }
+
+/*void fillSuffixTab(std::string data, std::vector<std::string>& suffixTab) {
+    for(size_t i = 0; i < data.size(); ++i) {
+        suffixTab.push_back(data.substr(i));
+    }
+}
+
+std::string BWTstring(std::string data, std::vector<std::string>& suffixTab) {
+    std::string result;
+    for(const auto& it : suffixTab) {
+        if(it.size() == data.size())     { result += '\0'; }
+        else                                { result += data[data.size()-it.size()-1]; }
+    }
+    return result;
+}*/
 
 void fillSuffixTab(std::string data, std::vector<std::string*>& suffixTab) {
     std::string temp;
@@ -72,7 +87,7 @@ void fillSuffixTab(std::string data, std::vector<std::string*>& suffixTab) {
         suffixTab.push_back(value);
     }*/
 
-    for(unsigned int i = 0; i < data.size(); ++i) {
+    for(size_t i = 0; i < data.size(); ++i) {
         value = new std::string;
         temp = data.substr(i);
         *value = temp;
@@ -92,9 +107,10 @@ std::string BWTstring(std::string data, std::vector<std::string*>& suffixTab) {
 int numberOfRuns(std::string result) {
     char lastchar;
     int number = 0;
+
     if(result.size() > 0)  { lastchar = result[0]; ++number; }
 
-    for(unsigned int i = 0; i < result.size(); ++i) {
+    for(size_t i = 0; i < result.size(); ++i) {
         if (result[i] != lastchar) {
             lastchar = result[i];
             if(result[i] != 0)      { ++number; }
