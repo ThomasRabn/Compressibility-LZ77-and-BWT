@@ -6,7 +6,7 @@
 #include <algorithm>
 
 #define RADIX 256
-#define SORT_THRESHOLD 25600
+#define SORT_THRESHOLD 75000
 
 ///**** COMPARE ****///
 struct Compare {
@@ -15,6 +15,7 @@ struct Compare {
     bool operator () (unsigned int i, unsigned int j) { return data->substr(i) < data->substr(j); }
 };
 
+void BWT(std::string name);
 void openFile(std::string name, std::string& data);
 std::string BWTstring(std::string data, std::vector<unsigned int>& orderTab);
 int numberOfRuns(std::string result);
@@ -25,28 +26,7 @@ template<typename T> void MSDRadixSort(std::vector<T>& tab, std::vector<T>& tabA
 
 int main()
 {
-    std::string data;
-
-    openFile("files/bibleline.txt", data);
-
-    //data = "abracadabra";
-    //data += '\0';
-
-    std::vector<unsigned int> orderTab;
-    for(size_t i = 0; i < data.size(); ++i) {
-        orderTab.push_back(i);
-    }
-    std::cout << "Starting to sort..." << std::endl;
-    //std::sort(orderTab.begin(), orderTab.end(), Compare(&data));
-    MSDRadixSort(orderTab, &data);
-
-    std::cout << "Fin tri" << std::endl;
-
-    std::string resultBWT = BWTstring(data, orderTab);
-
-    std::cout << resultBWT << std::endl;
-    std::cout << numberOfRuns(resultBWT);
-
+    BWT("files/aaa.txt");
     return 0;
 }
 
@@ -63,6 +43,27 @@ void openFile(std::string name, std::string& data) {
         }
         data += '\0';
     }
+}
+
+void BWT(std::string name) {
+    std::string data;
+    openFile(name, data);
+
+    //data = "abracadabra";
+    //data += '\0';
+
+    std::vector<unsigned int> orderTab;
+    for(size_t i = 0; i < data.size(); ++i) {
+        orderTab.push_back(i);
+    }
+    std::cout << "Starting to sort..." << std::endl;
+    std::sort(orderTab.begin(), orderTab.end(), Compare(&data));
+    //MSDRadixSort(orderTab, &data);
+
+    std::string resultBWT = BWTstring(data, orderTab);
+
+    std::cout << resultBWT << std::endl;
+    std::cout << numberOfRuns(resultBWT);
 }
 
 std::string BWTstring(std::string data, std::vector<unsigned int>& orderTab) {
@@ -90,8 +91,8 @@ int numberOfRuns(std::string result) {
     return number;
 }
 
-short int getByte(std::string elem, unsigned int i) {
-	if (elem.size() > i)    { return elem[i]; }
+short int getByte(std::string* elem, unsigned int i) {
+	if (elem->size() > i)    { return (*elem)[i]; }
 	else return -1;
 }
 
@@ -111,7 +112,8 @@ template<typename T> void MSDRadixSort(std::vector<T>& tab, std::vector<T>& tabA
         std::vector<int> counter(RADIX+2);
 
         for (int i = low; i < high; ++i) {
-            counter[getByte(data->substr(tab[i]), digit) + 2]++;
+            std::string dataText = data->substr(tab[i]);
+            counter[getByte(&dataText, digit) + 2]++;
         }
 
         for (int r = 0; r < RADIX+1; ++r) {
@@ -119,7 +121,8 @@ template<typename T> void MSDRadixSort(std::vector<T>& tab, std::vector<T>& tabA
         }
 
         for (int i = low; i < high; ++i) {
-            tabAux[counter[getByte(data->substr(tab[i]), digit)+1]++] = tab[i];
+            std::string dataText = data->substr(tab[i]);
+            tabAux[counter[getByte(&dataText, digit)+1]++] = tab[i];
         }
 
         for (int i = low; i < high; ++i) {

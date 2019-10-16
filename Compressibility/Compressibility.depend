@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1571194765 source:c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\main.cpp
+1571229324 source:c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\main.cpp
 	<iostream>
 	<string>
 	<fstream>
