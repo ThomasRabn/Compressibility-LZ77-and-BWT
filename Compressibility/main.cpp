@@ -5,40 +5,44 @@
 #include <set>
 #include <algorithm>
 
+#define RADIX 256
+#define SORT_THRESHOLD 25600
+
 ///**** COMPARE ****///
 struct Compare {
-    template<typename T>
-        bool operator()(T* a, T* b) const { return *a < *b; }
-    template<typename T>
-        bool operator()(T a, T b) const { return a < b; }
+    std::string* data;
+    Compare(std::string* dataparam) { data = dataparam; }
+    bool operator () (unsigned int i, unsigned int j) { return data->substr(i) < data->substr(j); }
 };
 
 void openFile(std::string name, std::string& data);
-/*void fillSuffixTab(std::string data, std::vector<std::string>& suffixTab);
-std::string BWTstring(std::string data, std::vector<std::string>& suffixTab);*/
-void fillSuffixTab(std::string data, std::vector<std::string*>& suffixTab);
-std::string BWTstring(std::string data, std::vector<std::string*>& suffixTab);
+std::string BWTstring(std::string data, std::vector<unsigned int>& orderTab);
 int numberOfRuns(std::string result);
+
+template<typename T> void MSDRadixSort(std::vector<T>& tab, std::string* data);
+template<typename T> void MSDRadixSort(std::vector<T>& tab, std::vector<T>& tabAux, int low, int high, int digit, std::string* data);
+
 
 int main()
 {
     std::string data;
-    std::vector<std::string*> suffixTab;
 
-    //openFile("files/aabb.txt", data);
+    openFile("files/bibleline.txt", data);
 
-    data = "abracadabra!";
-    data += '\0';
+    //data = "abracadabra";
+    //data += '\0';
 
-    fillSuffixTab(data, suffixTab);
+    std::vector<unsigned int> orderTab;
+    for(size_t i = 0; i < data.size(); ++i) {
+        orderTab.push_back(i);
+    }
+    std::cout << "Starting to sort..." << std::endl;
+    //std::sort(orderTab.begin(), orderTab.end(), Compare(&data));
+    MSDRadixSort(orderTab, &data);
 
-    std::sort(suffixTab.begin(), suffixTab.end(), Compare());
+    std::cout << "Fin tri" << std::endl;
 
-    /*for(auto it : suffixTab) {
-        std::cout << *it << std::endl;
-    }*/
-
-    std::string resultBWT = BWTstring(data, suffixTab);
+    std::string resultBWT = BWTstring(data, orderTab);
 
     std::cout << resultBWT << std::endl;
     std::cout << numberOfRuns(resultBWT);
@@ -61,45 +65,11 @@ void openFile(std::string name, std::string& data) {
     }
 }
 
-/*void fillSuffixTab(std::string data, std::vector<std::string>& suffixTab) {
-    for(size_t i = 0; i < data.size(); ++i) {
-        suffixTab.push_back(data.substr(i));
-    }
-}
-
-std::string BWTstring(std::string data, std::vector<std::string>& suffixTab) {
+std::string BWTstring(std::string data, std::vector<unsigned int>& orderTab) {
     std::string result;
-    for(const auto& it : suffixTab) {
-        if(it.size() == data.size())     { result += '\0'; }
-        else                                { result += data[data.size()-it.size()-1]; }
-    }
-    return result;
-}*/
-
-void fillSuffixTab(std::string data, std::vector<std::string*>& suffixTab) {
-    std::string temp;
-    std::string* value;
-
-    /*for(unsigned int i = data.size()-1; i < data.size(); i--) {
-        value = new std::string;
-        temp = data.substr(i);
-        *value = temp;
-        suffixTab.push_back(value);
-    }*/
-
-    for(size_t i = 0; i < data.size(); ++i) {
-        value = new std::string;
-        temp = data.substr(i);
-        *value = temp;
-        suffixTab.push_back(value);
-    }
-}
-
-std::string BWTstring(std::string data, std::vector<std::string*>& suffixTab) {
-    std::string result;
-    for(const auto& it : suffixTab) {
-        if((*it).size() == data.size())     { result += '\0'; }
-        else                                { result += data[data.size()-(*it).size()-1]; }
+    for(const auto& it : orderTab) {
+        if(it == 0)                         { result += '\0'; }
+        else                                { result += data[it-1]; }
     }
     return result;
 }
@@ -118,4 +88,47 @@ int numberOfRuns(std::string result) {
     }
 
     return number;
+}
+
+short int getByte(std::string elem, unsigned int i) {
+	if (elem.size() > i)    { return elem[i]; }
+	else return -1;
+}
+
+///**** MSD Radix Sort ****//
+
+template<typename T> void MSDRadixSort(std::vector<T>& tab, std::string* data) {
+	std::vector<T> tabAux(tab.size());
+	MSDRadixSort(tab, tabAux, 0, tab.size(), 0, data);
+}
+
+template<typename T> void MSDRadixSort(std::vector<T>& tab, std::vector<T>& tabAux, int low, int high, int digit, std::string* data) {
+    /// If the two bounds are too close to each other we sort it using the std::sort function
+    if ((high-low) < SORT_THRESHOLD) {
+        std::sort(tab.begin()+low, tab.begin()+high, Compare(data));
+    }
+    else {
+        std::vector<int> counter(RADIX+2);
+
+        for (int i = low; i < high; ++i) {
+            counter[getByte(data->substr(tab[i]), digit) + 2]++;
+        }
+
+        for (int r = 0; r < RADIX+1; ++r) {
+            counter[r+1] += counter[r];
+        }
+
+        for (int i = low; i < high; ++i) {
+            tabAux[counter[getByte(data->substr(tab[i]), digit)+1]++] = tab[i];
+        }
+
+        for (int i = low; i < high; ++i) {
+            tab[i] = tabAux[i-low];
+        }
+
+        for(int r = 0; r < RADIX+1; ++r) {
+            /// if there is many times the same letter we launch a sort for all of them
+            if(counter[r] < counter[r+1])    MSDRadixSort(tab, tabAux, low+counter[r], low+counter[r+1], digit+1, data);
+        }
+    }
 }
