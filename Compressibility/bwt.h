@@ -7,6 +7,7 @@
 #include <vector>
 #include <set>
 #include <algorithm>
+#include <queue>
 
 #define RADIX 256
 #define SORT_THRESHOLD 0

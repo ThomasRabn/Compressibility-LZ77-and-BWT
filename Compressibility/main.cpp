@@ -8,7 +8,7 @@
 
 int main()
 {
-    BWT("files/aaa.txt");
+    BWT("files/aabb.txt");
     return 0;
 }
 
