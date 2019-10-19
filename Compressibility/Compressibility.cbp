@@ -34,7 +34,11 @@
 		</Compiler>
 		<Unit filename="bwt.cpp" />
 		<Unit filename="bwt.h" />
+		<Unit filename="lz77.cpp" />
+		<Unit filename="lz77.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="useful.cpp" />
+		<Unit filename="useful.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
