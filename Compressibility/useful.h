@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <algorithm>
 #include <queue>
 
@@ -38,6 +39,7 @@ class Tree {
     private:
         Node* root;
     public:
+        Tree();
         void add(std::string addValue);
 };
 

@@ -13,8 +13,8 @@ void BWT(std::string name) {
         orderTab.push_back(i);
     }
     std::cout << "Starting to sort..." << std::endl;
-    //std::sort(orderTab.begin(), orderTab.end(), Compare(&data));
-    MSDRadixSort(orderTab, &data);
+    std::sort(orderTab.begin(), orderTab.end(), Compare(&data));
+    //MSDRadixSort(orderTab, &data);
 
     for(unsigned int i = 300000; i < orderTab.size(); ++i) {
         std::cout << data[orderTab[i]] << std::endl;

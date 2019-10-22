@@ -16,6 +16,11 @@ void Node::addNode(char addValue) {
     next.insert({addValue, newNext});
 }
 
+Tree::Tree() {
+    Node* newroot = new Node('\0');
+    root = newroot;
+}
+
 void Tree::add(std::string addValue) {
     Node* actualNode = root;
     for(unsigned int i = 0; i < addValue.size(); ++i) {
