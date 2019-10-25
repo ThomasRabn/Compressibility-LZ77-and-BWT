@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1572014171 source:c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\main.cpp
+1572028645 source:c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\main.cpp
 	"bwt.h"
 	"lz77.h"
 
@@ -22,9 +22,9 @@
 1571740020 source:c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\useful.cpp
 	"useful.h"
 
-1572021214 source:c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\lz77.cpp
+1572032468 source:c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\lz77.cpp
 	"lz77.h"
 
-1572020161 c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\lz77.h
+1572027105 c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\lz77.h
 	"useful.h"
 

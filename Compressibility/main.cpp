@@ -4,6 +4,6 @@
 int main()
 {
     //BWT("files/aaa.txt");
-    lz77("files/aaa.txt");
+    lz77("files/aabb.txt");
     return 0;
 }

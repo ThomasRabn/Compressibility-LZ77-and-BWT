@@ -5,10 +5,10 @@
 
 void lz77(std::string name);
 
-void insertSuffix (std::string data, std::unordered_map<std::string, unsigned int>& suffix1,
-                   std::unordered_map<std::string, unsigned int>& suffix2,
-                   std::unordered_map<std::string, unsigned int>& suffix4,
-                   std::unordered_map<std::string, unsigned int>& suffix8,
-                   std::unordered_map<std::string, unsigned int>& suffix16, unsigned int j, unsigned int index);
+void insertSuffix (std::string data, std::unordered_map<std::string, std::vector<unsigned int>>& suffix1,
+                   std::unordered_map<std::string, std::vector<unsigned int>>& suffix2,
+                   std::unordered_map<std::string, std::vector<unsigned int>>& suffix4,
+                   std::unordered_map<std::string, std::vector<unsigned int>>& suffix8,
+                   std::unordered_map<std::string, std::vector<unsigned int>>& suffix16, unsigned int j, unsigned int index);
 
 #endif // LZ77_H_INCLUDED
