@@ -4,6 +4,11 @@
 #include "useful.h"
 
 void lz77(std::string name);
-void insertSuix (std::string data, std::unordered_set<std::string>& suix, unsigned int j);
+
+void insertSuffix (std::string data, std::unordered_map<std::string, unsigned int>& suffix1,
+                   std::unordered_map<std::string, unsigned int>& suffix2,
+                   std::unordered_map<std::string, unsigned int>& suffix4,
+                   std::unordered_map<std::string, unsigned int>& suffix8,
+                   std::unordered_map<std::string, unsigned int>& suffix16, unsigned int j, unsigned int index);
 
 #endif // LZ77_H_INCLUDED
