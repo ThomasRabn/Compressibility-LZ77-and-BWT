@@ -40,6 +40,7 @@ void openFile(std::string name, std::string& data) {
     else {
         while(getline(file, temp)) {
             data += temp;
+            data += '\n';
         }
         data += '\0';
     }
