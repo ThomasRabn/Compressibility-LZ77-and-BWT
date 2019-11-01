@@ -1,172 +1,112 @@
 #include "lz77.h"
 
 void lz77(std::string name) {
-    //Tree suffixTree;
-
     std::string data;
 
     openFile(name, data);
 
-    std::unordered_set<std::string> suffix;
-    std::unordered_map<std::string, std::vector<unsigned int>> suffix1;
-    std::unordered_map<std::string, std::vector<unsigned int>> suffix2;
-    std::unordered_map<std::string, std::vector<unsigned int>> suffix4;
-    std::unordered_map<std::string, std::vector<unsigned int>> suffix8;
-    std::unordered_map<std::string, std::vector<unsigned int>> suffix16;
+    std::unordered_map<std::string, std::set<unsigned int>> suffix1;
+    std::unordered_map<std::string, std::set<unsigned int>> suffix2;
+    std::unordered_map<std::string, std::set<unsigned int>> suffix4;
+    std::unordered_map<std::string, std::set<unsigned int>> suffix8;
+    std::unordered_map<std::string, std::set<unsigned int>> suffix16;
 
+    unsigned int i = 0;
+    unsigned int j = 1;
     unsigned int results = 0;
 
-    /*data = "tobeornottobe";
+    /*data = "abracadabra";
     data += '\0';*/
 
-    std::string subdata;
-
     /// loop for all the characters
-    for(unsigned int i = 0; i < data.size()-1; ++i) {
-        /// Loop starting with the i character and while we are not at the end and we haven't find a substring that doesn't match
-        /*std::cout << std::endl << std::endl << std::endl << std::endl << "SUFFIX 1" << std::endl;
-        for(auto it : suffix1) {
-            std::cout << it.first <<std::endl;
+    while(i < data.size()-1) {
+
+        bool found = 0; // Is set to true when we found a match
+
+        if(data.size()-1 > i+16) {
+            searchInMap(&data, 16, &suffix16, found, i, j);
+            if(found)   { insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i); }
         }
-        std::cout << "FIN SUFFIX 1" << std::endl;
 
-        std::cout << "SUFFIX 2" << std::endl;
-        for(auto it : suffix2) {
-            std::cout << it.first <<std::endl;
+        if (data.size()-1 > i+8 && !found) {
+            searchInMap(&data, 8, &suffix8, found, i, j);
+            if(found)   { insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i); }
         }
-        std::cout << "FIN SUFFIX 2" << std::endl;
 
-        std::cout << "SUFFIX 4" << std::endl;
-        for(auto it : suffix4) {
-            std::cout << it.first <<std::endl;
+        if (data.size()-1 > i+4 && !found) {
+            searchInMap(&data, 4, &suffix4, found, i, j);
+            if(found)   { insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i); }
         }
-        std::cout << "FIN SUFFIX 4" << std::endl;
 
-        std::cout << "SUFFIX 8" << std::endl;
-        for(auto it : suffix8) {
-            std::cout << it.first <<std::endl;
+        if (data.size()-1 > i+2 && !found) {
+            searchInMap(&data, 2, &suffix2, found, i, j);
+            if(found)   { insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i); }
         }
-        std::cout << "FIN SUFFIX 8" << std::endl;
 
-        std::cout << "SUFFIX 16" << std::endl;
-        for(auto it : suffix16) {
-            std::cout << it.first <<std::endl;
-            for(int i=0;i<it.second.size();i++)
-                std::cout<<" "<<it.second[i];
-            std::cout<<std::endl;
-        }
-        std::cout << "FIN SUFFIX 16" << std::endl << std::endl << std::endl << std::endl;*/
-
-        for(unsigned int length = 1; length < data.size()-i+1; length++) {
-
-            if(length >= 16) {
-                bool verif = 0;
-                subdata = data.substr(i, 16);
-                auto it16 = suffix16.find(subdata);
-
-                subdata = data.substr(i, length);
-
-                if(it16 == suffix16.end())    { insertSuffix(data, suffix1, suffix2, suffix4, suffix8, suffix16, length, i); results++; i+=length-1; break; }
-                else if(length > 16) {
-                    for(unsigned int k = 0; k < it16->second.size(); ++k) {
-                        if(it16->second[k]+length-1 < i && data[it16->second[k]+length-1] == data[i+length-1]) { verif = 1; break; }
-                    }
-                    if(!verif) { insertSuffix(data, suffix1, suffix2, suffix4, suffix8, suffix16, length, i); results++; i+=length-1; break; }
-                }
+        if (data.size()-1 > i+1 && !found) {
+            auto it = suffix1.find(data.substr(i, 1));
+            if(it != suffix1.end()) {
+                j=1;
+                insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i);
             }
-
-
-            else if(length >= 8) {
-
-                bool verif = 0;
-                subdata = data.substr(i, 8);
-                auto it8 = suffix8.find(subdata);
-
-                subdata = data.substr(i, length);
-
-                if(it8 == suffix8.end())    { insertSuffix(data, suffix1, suffix2, suffix4, suffix8, suffix16, length, i); results++; i+=length-1; break; }
-                else if(length > 8) {
-                    for(unsigned int k = 0; k < it8->second.size(); ++k) {
-                        if(it8->second[k]+length-1 < i && data[it8->second[k]+length-1] == data[i+length-1]) { verif = 1; break; }
-                    }
-                    if(!verif) { insertSuffix(data, suffix1, suffix2, suffix4, suffix8, suffix16, length, i); results++; i+=length-1; break; }
-                }
+            else {
+                j=0;
+                insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i);
             }
-
-            else if(length >= 4) {
-                bool verif = 0;
-                subdata = data.substr(i, 4);
-                auto it4 = suffix4.find(subdata);
-
-                subdata = data.substr(i, length);
-
-                if(it4 == suffix4.end())    { insertSuffix(data, suffix1, suffix2, suffix4, suffix8, suffix16, length, i); results++; i+=length-1; break; }
-                else if(length > 4) {
-                    for(unsigned int k = 0; k < it4->second.size(); ++k) {
-                        if(it4->second[k]+length-1 < i && data[it4->second[k]+length-1] == data[i+length-1]) { verif = 1; break; }
-                    }
-                    if(!verif) { insertSuffix(data, suffix1, suffix2, suffix4, suffix8, suffix16, length, i); results++; i+=length-1; break; }
-                }
-            }
-
-            else if(length >= 2) {
-                bool verif = 0;
-                subdata = data.substr(i, 2);
-                auto it2 = suffix2.find(subdata);
-
-                subdata = data.substr(i, length);
-
-                if(it2 == suffix2.end())    { insertSuffix(data, suffix1, suffix2, suffix4, suffix8, suffix16, length, i); results++; i+=length-1; break; }
-                else if(length > 2) {
-                    for(unsigned int k = 0; k < it2->second.size(); ++k) {
-                        if(it2->second[k]+length-1 < i && data[it2->second[k]+length-1] == data[i+length-1]) { verif = 1; }
-                    }
-                    if(!verif){ insertSuffix(data, suffix1, suffix2, suffix4, suffix8, suffix16, length, i); results++; i+=length-1; break; }
-                }
-            }
-
-            else if(length == 1) {
-                subdata = data[i];
-                auto it = suffix1.find(subdata);
-                if(it == suffix1.end())     { insertSuffix(data, suffix1, suffix2, suffix4, suffix8, suffix16, length, i); results++; i+=length-1; break; }
-            }
-
-            /*if(i+length == data.size()-1) {
-                std::cout << "In last";
-                results++;
-                std::cout << data.substr(i) << std::endl;
-                i+=length;
-            }*/
         }
-        //std::cout << subdata << std::endl;
-
+        results++;
+        i+=j;
     }
 
     std::cout << results;
 }
 
-void insertSuffix (std::string data, std::unordered_map<std::string, std::vector<unsigned int>>& suffix1,
-                   std::unordered_map<std::string, std::vector<unsigned int>>& suffix2,
-                   std::unordered_map<std::string, std::vector<unsigned int>>& suffix4,
-                   std::unordered_map<std::string, std::vector<unsigned int>>& suffix8,
-                   std::unordered_map<std::string, std::vector<unsigned int>>& suffix16, unsigned int j, unsigned int index)
+void searchInMap(std::string* data, unsigned int mapNumber, std::unordered_map<std::string, std::set<unsigned int>>* suffix, bool& found, unsigned int& i, unsigned int& j) {
+    unsigned int verif = 0, tempVerif = 0;
+    auto it = suffix->find(data->substr(i, mapNumber));
+    if(it != suffix->end()) {
+        for(j = mapNumber; i+j < data->size(); ++j) {
+            verif = 0;
+            for(auto eachIndex : it->second) {
+                tempVerif = verif;
+                for(unsigned int k = j; k >= mapNumber; --k) {
+                    if(eachIndex+k >= i || (*data)[i+k] != (*data)[eachIndex+k]) {
+                        verif++;
+                        break;
+                    }
+                }
+                if(tempVerif == verif) break;
+            }
+            if(verif == it->second.size())  { found=1; break; }
+        }
+    }
+}
+
+
+void insertSuffix (std::string* data, std::unordered_map<std::string, std::set<unsigned int>>* suffix1,
+                   std::unordered_map<std::string, std::set<unsigned int>>* suffix2,
+                   std::unordered_map<std::string, std::set<unsigned int>>* suffix4,
+                   std::unordered_map<std::string, std::set<unsigned int>>* suffix8,
+                   std::unordered_map<std::string, std::set<unsigned int>>* suffix16, unsigned int& j, unsigned int& index)
 {
+    j++;
+    //std::cout << data->substr(index, j) << std::endl;
     if(index > 15) {
-        for(unsigned int i = index-15; i < j+index; ++i) {
-            if(j+index-i >= 16) { suffix16[data.substr(i, 16)].push_back(i); } //suffix16.insert({data.substr(i, 16), i}); }
-            if(j+index-i >= 8 && i >= index-7)  { suffix8[data.substr(i, 8)].push_back(i); } //suffix8.insert ({data.substr(i, 8), i});  }
-            if(j+index-i >= 4 && i >= index-7)  { suffix4[data.substr(i, 4)].push_back(i); } //suffix4.insert ({data.substr(i, 4), i});  }
-            if(j+index-i >= 2 && i >= index-7)  { suffix2[data.substr(i, 2)].push_back(i); } //suffix2.insert ({data.substr(i, 2), i});  }
-            suffix1[data.substr(i, 1 && i >= index)].push_back(index); //suffix1.insert({data.substr(i, 1), i});
+        for(unsigned int i = index - 15; i < j+index; ++i) {
+            if(j+index-i >= 16) { (*suffix16)[data->substr(i, 16)].insert(i); }
+            if(j+index-i >= 8)  { (*suffix8)[data->substr(i, 8)].insert(i); }
+            if(j+index-i >= 4)  { (*suffix4)[data->substr(i, 4)].insert(i); }
+            if(j+index-i >= 2)  { (*suffix2)[data->substr(i, 2)].insert(i); }
+            if(i >= index)      { (*suffix1)[data->substr(i, 1)].insert(i); }
         }
     }
     else {
         for(unsigned int i = 0; i < j+index; ++i) {
-            if(j+index-i >= 16) { suffix16[data.substr(i, 16)].push_back(i); } //suffix16.insert({data.substr(i, 16), i}); }
-            if(j+index-i >= 8)  { suffix8[data.substr(i, 8)].push_back(i); } //suffix8.insert ({data.substr(i, 8), i});  }
-            if(j+index-i >= 4)  { suffix4[data.substr(i, 4)].push_back(i); } //suffix4.insert ({data.substr(i, 4), i});  }
-            if(j+index-i >= 2)  { suffix2[data.substr(i, 2)].push_back(i); } //suffix2.insert ({data.substr(i, 2), i});  }
-            suffix1[data.substr(i, 1)].push_back(index); //suffix1.insert({data.substr(i, 1), i});
+            if(j+index-i >= 16) { (*suffix16)[data->substr(i, 16)].insert(i); }
+            if(j+index-i >= 8)  { (*suffix8)[data->substr(i, 8)].insert(i); }
+            if(j+index-i >= 4)  { (*suffix4)[data->substr(i, 4)].insert(i); }
+            if(j+index-i >= 2)  { (*suffix2)[data->substr(i, 2)].insert(i); }
+            if(i >= index)      { (*suffix1)[data->substr(i, 1)].insert(i); }
         }
     }
 }
