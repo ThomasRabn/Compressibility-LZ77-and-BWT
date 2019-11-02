@@ -1,35 +1,8 @@
 #include "useful.h"
 
-Node::Node(char newValue)
-    : value{newValue}
-{}
-
-Node* Node::searchNode(char searchedValue) {
-    auto it = next.find(searchedValue);
-
-    if(it != next.end())    { return it->second; }
-    else                    { return nullptr; }
-}
-
-void Node::addNode(char addValue) {
-    Node* newNext = new Node(addValue);
-    next.insert({addValue, newNext});
-}
-
-Tree::Tree() {
-    Node* newroot = new Node('\0');
-    root = newroot;
-}
-
-void Tree::add(std::string addValue) {
-    Node* actualNode = root;
-    for(unsigned int i = 0; i < addValue.size(); ++i) {
-        if(actualNode->searchNode(addValue[i]) == nullptr) {
-            actualNode->addNode(addValue[i]);
-        }
-    }
-}
-
+///**** OpenFile ****///
+/** Store the content of a file in a string **/
+/* Takes a file nam (as a string) and a string to fill as parameters */
 void openFile(std::string name, std::string& data) {
     std::ifstream file{name};
     std::string temp;
@@ -45,19 +18,25 @@ void openFile(std::string name, std::string& data) {
     }
 }
 
+void changeFile(std::string& name) {
+    std::string temp;
+    std::cout << std::endl << "What is the name of your file ? (make sure that it is in the \"files\" folder)" << std::endl << ">>";
+    std::cin >> temp;
+    name = "files/" + temp;
+}
 
+
+///**** METHODS USEFUL FOR RADIX SORTING ****///
 
 short int getByte(std::string* elem, unsigned int i) {
 	if (elem->size() > i)    { return (*elem)[i]; }
 	else return -1;
 }
 
-
 ///**** MSD Radix Sort ****//
-/// Recursive version was overflowing so I tried to implement a iterative version but it seems really slow ///
-
+/** Recursive version was overflowing so I tried to implement a iterative version but it is slower than the recursive version (but better than std::sort) **/
+/* Takes an array of unsigned int (which are indexes of the string) and a pointer to the original string as parameters */
 void MSDRadixSort(std::vector<unsigned int>& tab, std::string* data) {
-    /// If the two bounds are too close to each other we sort it using the std::sort function
     unsigned int low, high, currentDigit;
     std::queue<unsigned int> startPoint, endPoint, digit;
     std::vector<unsigned int> tabAux(tab.size());
@@ -66,14 +45,10 @@ void MSDRadixSort(std::vector<unsigned int>& tab, std::string* data) {
     endPoint.push(data->size());
     digit.push(0);
 
-    std::cout << data->size() << std::endl;
-
     while(!(digit.empty())) {
         low = startPoint.front();
         high = endPoint.front();
         currentDigit = digit.front();
-
-        std::cout << currentDigit << " ";
 
         startPoint.pop();
         endPoint.pop();
@@ -108,8 +83,42 @@ void MSDRadixSort(std::vector<unsigned int>& tab, std::string* data) {
                     endPoint.push(low+counter[r+1]);
                     digit.push(currentDigit+1);
                 }
-
             }
+        }
+    }
+}
+
+
+
+///*****   NODE   *****///
+// We wanted to implement a suffix tree for the LZ77 but it turned out it was too slow and we finally used the hash table technique //
+
+Node::Node(char newValue)
+    : value{newValue}
+{}
+
+Node* Node::searchNode(char searchedValue) {
+    auto it = next.find(searchedValue);
+
+    if(it != next.end())    { return it->second; }
+    else                    { return nullptr; }
+}
+
+void Node::addNode(char addValue) {
+    Node* newNext = new Node(addValue);
+    next.insert({addValue, newNext});
+}
+
+Tree::Tree() {
+    Node* newroot = new Node('\0');
+    root = newroot;
+}
+
+void Tree::add(std::string addValue) {
+    Node* actualNode = root;
+    for(unsigned int i = 0; i < addValue.size(); ++i) {
+        if(actualNode->searchNode(addValue[i]) == nullptr) {
+            actualNode->addNode(addValue[i]);
         }
     }
 }
