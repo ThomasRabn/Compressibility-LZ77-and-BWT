@@ -1,15 +1,15 @@
 # depslib dependency file v1.0
-1572721266 source:c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\main.cpp
+1572825311 source:c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\main.cpp
 	"bwt.h"
 	"lz77.h"
 
-1572721491 source:c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\bwt.cpp
+1572835543 source:c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\bwt.cpp
 	"bwt.h"
 
 1572715667 c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\bwt.h
 	"useful.h"
 
-1572721542 c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\useful.h
+1572836571 c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\useful.h
 	<iostream>
 	<string>
 	<fstream>
@@ -20,10 +20,10 @@
 	<queue>
 	<chrono>
 
-1572721240 source:c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\useful.cpp
+1572825577 source:c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\useful.cpp
 	"useful.h"
 
-1572721522 source:c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\lz77.cpp
+1572825208 source:c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\lz77.cpp
 	"lz77.h"
 
 1572716908 c:\users\thoma\documents\cours\ing 3\malmö university\algorithmic methods for search and storage\assignments\compressibility-lz77-and-bwt\compressibility\lz77.h

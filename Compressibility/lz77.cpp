@@ -5,77 +5,78 @@
 /* Takes a file name as parameter */
 void lz77(std::string name) {
     std::string data;
-    openFile(name, data);
+    if(openFile(name, data) == 0) {
 
-    auto t_start = std::chrono::high_resolution_clock::now();
+        auto t_start = std::chrono::high_resolution_clock::now();
 
-    // We create 5 differents hash tables that will only store the suffixes of 1 length (1 cahracter, 2 characters, 4, 8 or 16) //
-    std::unordered_map<std::string, std::set<unsigned int>> suffix1;
-    std::unordered_map<std::string, std::set<unsigned int>> suffix2;
-    std::unordered_map<std::string, std::set<unsigned int>> suffix4;
-    std::unordered_map<std::string, std::set<unsigned int>> suffix8;
-    std::unordered_map<std::string, std::set<unsigned int>> suffix16;
+        // We create 5 differents hash tables that will only store the suffixes of 1 length (1 cahracter, 2 characters, 4, 8 or 16) //
+        std::unordered_map<std::string, std::set<unsigned int>> suffix1;
+        std::unordered_map<std::string, std::set<unsigned int>> suffix2;
+        std::unordered_map<std::string, std::set<unsigned int>> suffix4;
+        std::unordered_map<std::string, std::set<unsigned int>> suffix8;
+        std::unordered_map<std::string, std::set<unsigned int>> suffix16;
 
-    unsigned int i = 0;
-    unsigned int j = 1;
-    unsigned int results = 0;
+        unsigned int i = 0;
+        unsigned int j = 1;
+        unsigned int results = 0;
 
-    /*data = "abracadabra";
-    data += '\0';*/
+        /*data = "abracadabra";
+        data += '\0';*/
 
-    /// loop for all the characters ///
-    while(i < data.size()-1) {
+        /// loop for all the characters ///
+        while(i < data.size()-1) {
 
-        bool found = 0; // Is set to true when we find a match
+            bool found = 0; // Is set to true when we find a match
 
-        /// We start by searching the next 16 characters (if the substring is greater that 16 characters) ///
-        /* If we find it we add it in our suffix list */
-        if(data.size()-1 > i+16) {
-            searchInMap(&data, 16, &suffix16, found, i, j);
-            if(found)   { insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i); }
-        }
-
-        /// We search the next 8 characters if the 16 haven't been found (and the substring is longer than 8 characters ///
-        if (data.size()-1 > i+8 && !found) {
-            searchInMap(&data, 8, &suffix8, found, i, j);
-            if(found)   { insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i); }
-        }
-
-        /// We search the next 4 characters ///
-        if (data.size()-1 > i+4 && !found) {
-            searchInMap(&data, 4, &suffix4, found, i, j);
-            if(found)   { insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i); }
-        }
-
-        /// We search the next 2 characters ///
-        if (data.size()-1 > i+2 && !found) {
-            searchInMap(&data, 2, &suffix2, found, i, j);
-            if(found)   { insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i); }
-        }
-
-        /// Special case if we haven't found any of the above ///
-        if (data.size()-1 > i+1 && !found) {
-            /// We search the next letter. If we find it we add the next 2, else we only add 1 letter ///
-            auto it = suffix1.find(data.substr(i, 1));
-            if(it != suffix1.end()) {
-                j=1;
-                insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i);
+            /// We start by searching the next 16 characters (if the substring is greater that 16 characters) ///
+            /* If we find it we add it in our suffix list */
+            if(data.size()-1 > i+16) {
+                searchInMap(&data, 16, &suffix16, found, i, j);
+                if(found)   { insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i); }
             }
-            else {
-                j=0;
-                insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i);
+
+            /// We search the next 8 characters if the 16 haven't been found (and the substring is longer than 8 characters ///
+            if (data.size()-1 > i+8 && !found) {
+                searchInMap(&data, 8, &suffix8, found, i, j);
+                if(found)   { insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i); }
             }
+
+            /// We search the next 4 characters ///
+            if (data.size()-1 > i+4 && !found) {
+                searchInMap(&data, 4, &suffix4, found, i, j);
+                if(found)   { insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i); }
+            }
+
+            /// We search the next 2 characters ///
+            if (data.size()-1 > i+2 && !found) {
+                searchInMap(&data, 2, &suffix2, found, i, j);
+                if(found)   { insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i); }
+            }
+
+            /// Special case if we haven't found any of the above ///
+            if (data.size()-1 > i+1 && !found) {
+                /// We search the next letter. If we find it we add the next 2, else we only add 1 letter ///
+                auto it = suffix1.find(data.substr(i, 1));
+                if(it != suffix1.end()) {
+                    j=1;
+                    insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i);
+                }
+                else {
+                    j=0;
+                    insertSuffix(&data, &suffix1, &suffix2, &suffix4, &suffix8, &suffix16, j, i);
+                }
+            }
+            /// After 1 loop we increase the results and change i to its new value ///
+            results++;
+            i+=j;
         }
-        /// After 1 loop we increase the results and change i to its new value ///
-        results++;
-        i+=j;
+
+        std::cout << std::endl << "Result: " << results << std::endl << std::endl;
+
+        auto t_end = std::chrono::high_resolution_clock::now();
+
+        std::cout << std::endl << "       LZ77 was : " << NUM_mSEC/1000 << " s long" << std::endl;
     }
-
-    std::cout << std::endl << results << std::endl << std::endl;
-
-    auto t_end = std::chrono::high_resolution_clock::now();
-
-    std::cout << std::endl << "       LZ77 was : " << NUM_mSEC/1000 << " s long" << std::endl;
 }
 
 

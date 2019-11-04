@@ -2,12 +2,12 @@
 
 ///**** OpenFile ****///
 /** Store the content of a file in a string **/
-/* Takes a file nam (as a string) and a string to fill as parameters */
-void openFile(std::string name, std::string& data) {
+/* Takes a file name (as a string) and a string to fill as parameters */
+int openFile(std::string name, std::string& data) {
     std::ifstream file{name};
     std::string temp;
 
-    if(!file)   { std::cout << "Error, file cannot be opened" << std::endl; }
+    if(!file)   { std::cout << "Error, file cannot be opened" << std::endl; return 1; }
 
     /// We put all the text of the file in the string and add a '\0' char at the end
     else {
@@ -15,14 +15,18 @@ void openFile(std::string name, std::string& data) {
             data += temp;
         }
         data += '\0';
+        return 0;
     }
 }
 
+///**** ChangeFile ****///
+/** Ask the name of a text file and set it to the current file **/
+/* Takes a file name (as a reference to a string) to change it */
 void changeFile(std::string& name) {
     std::string temp;
-    std::cout << std::endl << "What is the name of your file ? (make sure that it is in the \"files\" folder)" << std::endl << ">>";
+    std::cout << std::endl << "What is the name of your file ? (make sure that it is in the \"files\" folder)" << std::endl << ">> ";
     std::cin >> temp;
-    name = "files/" + temp;
+    name = "files/" + temp + ".txt";
 }
 
 
@@ -84,41 +88,6 @@ void MSDRadixSort(std::vector<unsigned int>& tab, std::string* data) {
                     digit.push(currentDigit+1);
                 }
             }
-        }
-    }
-}
-
-
-
-///*****   NODE   *****///
-// We wanted to implement a suffix tree for the LZ77 but it turned out it was too slow and we finally used the hash table technique //
-
-Node::Node(char newValue)
-    : value{newValue}
-{}
-
-Node* Node::searchNode(char searchedValue) {
-    auto it = next.find(searchedValue);
-
-    if(it != next.end())    { return it->second; }
-    else                    { return nullptr; }
-}
-
-void Node::addNode(char addValue) {
-    Node* newNext = new Node(addValue);
-    next.insert({addValue, newNext});
-}
-
-Tree::Tree() {
-    Node* newroot = new Node('\0');
-    root = newroot;
-}
-
-void Tree::add(std::string addValue) {
-    Node* actualNode = root;
-    for(unsigned int i = 0; i < addValue.size(); ++i) {
-        if(actualNode->searchNode(addValue[i]) == nullptr) {
-            actualNode->addNode(addValue[i]);
         }
     }
 }

@@ -33,11 +33,13 @@ struct Compare {
 
 ///**** OpenFile ****///
 /** Store the content of a file in a string **/
-/* Takes a file nam (as a string) and a string to fill as parameters */
-void openFile(std::string name, std::string& data);
+/* Takes a file name (as a string) and a string to fill as parameters */
+int openFile(std::string name, std::string& data);
 
 
-
+///**** ChangeFile ****///
+/** Ask the name of a text file and set it to the current file **/
+/* Takes a file name (as a reference to a string) to change it */
 void changeFile(std::string& name);
 
 
@@ -45,28 +47,5 @@ void changeFile(std::string& name);
 /** Recursive version was overflowing so I tried to implement a iterative version but it is slower than the recursive version (but better than std::sort) **/
 /* Takes an array of unsigned int (which are indexes of the string) and a pointer to the original string as parameters */
 void MSDRadixSort(std::vector<unsigned int>& tab, std::string* data);
-
-
-
-///**** Suffix Tree ****///
-
-class Node {
-    private:
-        char value;
-        std::unordered_map<char, Node*> next;
-    public:
-        Node(char newValue);
-        Node* searchNode(char searchedValue);
-        void addNode(char addValue);
-};
-
-class Tree {
-    private:
-        Node* root;
-    public:
-        Tree();
-        void add(std::string addValue);
-};
-
 
 #endif // USEFUL_H_INCLUDED
