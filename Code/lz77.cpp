@@ -9,7 +9,7 @@ void lz77(std::string name) {
 
         auto t_start = std::chrono::high_resolution_clock::now();
 
-        // We create 5 differents hash tables that will only store the suffixes of 1 length (1 cahracter, 2 characters, 4, 8 or 16) //
+        // We create 5 differents hash tables that will only store the suffixes of 1 length (1 character, 2 characters, 4, 8 or 16) //
         std::unordered_map<std::string, std::set<unsigned int>> suffix1;
         std::unordered_map<std::string, std::set<unsigned int>> suffix2;
         std::unordered_map<std::string, std::set<unsigned int>> suffix4;
